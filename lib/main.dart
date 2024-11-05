@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -43,9 +45,8 @@ class InstagramApp extends StatelessWidget {
 
     // 만약 사용자가 로그인하지 않은 상태라면 `LoginPage`를 보여줍니다.
     // 만약 사용자가 로그인한 상태라면 `FeedPage`를 보여줍니다.
-
     return MaterialApp(
-      title: 'Instagram',
+      title: 'Instagram Mini',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.pinkAccent),
         useMaterial3: true,

@@ -2,40 +2,52 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/pages/feed_page.dart';
 import 'package:instagram/pages/signup_page.dart';
+import 'package:instagram/widgets/barrier_progress_indicator.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  bool _isLoading = false;
 
   final TextEditingController _emailController = TextEditingController();
+
   final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF1F2F3),
-      body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Spacer(),
-              Image.asset(
-                'assets/logo.png',
-                width: 76,
-                height: 76,
-              ),
-              Container(height: 70),
-              _buildEmailField(),
-              Container(height: 16),
-              _buildPasswordField(),
-              Container(height: 16),
-              _buildLoginButton(context),
-              Container(height: 56),
-              const Spacer(),
-              _buildSignUpButton(context),
-              Container(height: 40),
-            ],
+    return BarrierProgressIndicator(
+      isActive: _isLoading,
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF1F2F3),
+        body: SafeArea(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Spacer(),
+                Image.asset(
+                  'assets/logo.png',
+                  width: 76,
+                  height: 76,
+                ),
+                Container(height: 70),
+                _buildEmailField(),
+                Container(height: 16),
+                _buildPasswordField(),
+                Container(height: 16),
+                _buildLoginButton(context),
+                Container(height: 56),
+                const Spacer(),
+                _buildSignUpButton(context),
+                Container(height: 40),
+              ],
+            ),
           ),
         ),
       ),
@@ -155,6 +167,8 @@ class LoginPage extends StatelessWidget {
     final String password = _passwordController.text;
 
     try {
+      setState(() => _isLoading = true);
+
       // FirebaseAuth 인증 처리
       final UserCredential credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
@@ -179,6 +193,8 @@ class LoginPage extends StatelessWidget {
           content: Text('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.'),
         ),
       );
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 }

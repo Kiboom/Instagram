@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/data/post.dart';
@@ -60,8 +61,35 @@ class _PostWidgetState extends State<PostWidget> {
     }
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
-      child: Image.network(
-        widget.item.imageUrl ?? "",
+      child: CachedNetworkImage(
+        imageUrl: widget.item.imageUrl ?? "",
+        placeholder: (context, url) {
+          return Container(
+            height: 300,
+            alignment: Alignment.center,
+            color: Colors.black.withOpacity(0.03),
+            child: Container(
+              width: 30,
+              height: 30,
+              child: const CircularProgressIndicator(
+                strokeWidth: 1.0,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.black45),
+                strokeCap: StrokeCap.round,
+              ),
+            ),
+          );
+        },
+        errorWidget: (context, url, error) {
+          return Container(
+            height: 300,
+            alignment: Alignment.center,
+            child: const Icon(
+              Icons.error,
+              size: 56,
+              color: Colors.black54,
+            ),
+          );
+        },
         width: double.infinity,
         height: 300,
         fit: BoxFit.cover,

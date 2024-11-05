@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/data/post.dart';
+import 'package:instagram/pages/login_page.dart';
 import 'package:instagram/pages/write_page.dart';
 import 'package:instagram/widgets/post_widget.dart';
 
@@ -20,6 +23,7 @@ class _FeedPageState extends State<FeedPage> {
   @override
   void initState() {
     super.initState();
+
     _loadPosts();
     _loadActiveUsers();
   }
@@ -34,17 +38,19 @@ class _FeedPageState extends State<FeedPage> {
         onRefresh: _loadPosts,
         child: SafeArea(
           bottom: false,
-          child: ListView(
-            children: [
-              // 인스타그램에 접속한 유저 목록
-              _buildActiveUsers(),
+          child: CupertinoScrollbar(
+            child: ListView(
+              children: [
+                // 인스타그램에 접속한 유저 목록
+                _buildActiveUsers(),
 
-              // 인스타그램 피드 카드
-              for (final item in _posts)
-                PostWidget(
-                  item: item,
-                ),
-            ],
+                // 인스타그램 피드 카드
+                for (final item in _posts)
+                  PostWidget(
+                    item: item,
+                  ),
+              ],
+            ),
           ),
         ),
       ),
@@ -120,34 +126,52 @@ class _FeedPageState extends State<FeedPage> {
       ),
       centerTitle: true,
       actions: [
+        IconButton(
+          icon: Icon(
+            Icons.add_box_outlined,
+            color: isWriteButtonRed ? Colors.red : Colors.black,
+          ),
+          onPressed: () async {
+            // 글쓰기 페이지로 이동
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                fullscreenDialog: true,
+                builder: (context) {
+                  return WritePage();
+                },
+              ),
+            );
+            _loadPosts();
+          },
+        ),
         Container(
           margin: EdgeInsets.only(right: 16),
           child: IconButton(
             icon: Icon(
-              Icons.add_box_outlined,
-              color: isWriteButtonRed ? Colors.red : Colors.black,
+              Icons.logout_rounded,
+              color: Colors.black,
             ),
-            onPressed: () {
-              // 글쓰기 페이지로 이동
-              Navigator.push(
-                context,
+            onPressed: () async {
+              // 로그아웃 처리
+              await FirebaseAuth.instance.signOut();
+              Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  fullscreenDialog: true,
                   builder: (context) {
-                    return WritePage();
+                    return LoginPage();
                   },
                 ),
               );
             },
           ),
-        ),
+        )
       ],
     );
   }
 
   Future<void> _loadPosts() async {
     // FirebaseFirestore로부터 데이터를 받아옵니다.
-    final snapshot = await FirebaseFirestore.instance.collection("posts").get();
+    final snapshot = await FirebaseFirestore.instance.collection("posts").orderBy("createdAt", descending: true).get();
     final documents = snapshot.docs;
 
     // FirebaseFirestore로부터 받아온 데이터를 Post 객체로 변환합니다.
