@@ -42,7 +42,7 @@ android {
     }
 }
 
-apply plugin: 'com.google.firebase.crashlytics'
+// apply plugin: 'com.google.firebase.crashlytics'
 
 flutter {
     source = "../.."

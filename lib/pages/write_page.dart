@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:instagram/logging.dart';
 import 'package:instagram/widgets/barrier_progress_indicator.dart';
 import 'package:instagram/widgets/haptic_feedback.dart';
 import 'package:instagram/widgets/rounded_inkwell.dart';
@@ -135,6 +136,14 @@ class _WritePageState extends State<WritePage> {
           color: Colors.white,
         ),
         onPressed: () async {
+          logGoogleAnalyticsEvent(
+            "photo_button_clicked",
+            {
+              "page": "write_page",
+              "image_count": _pickedImages.length,
+            },
+          );
+
           if (_pickedImages.isNotEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text('이미지는 최대 1개까지 선택 가능합니다.'),
@@ -148,6 +157,7 @@ class _WritePageState extends State<WritePage> {
 
           // 선택한 파일이 없으면 종료
           if (pickedFile == null) exit(0);
+
           setState(() {
             _pickedImages.add(File(pickedFile.path));
           });
@@ -246,6 +256,15 @@ class _WritePageState extends State<WritePage> {
 
     // TextField 초기화
     _textController.clear();
+
+    // Google Analytics 이벤트 로깅
+    await logGoogleAnalyticsEvent(
+      "write",
+      {
+        "page": "write_page",
+        "image_count": _pickedImages.length,
+      },
+    );
 
     // 이전 페이지로 이동
     Navigator.pop(context);
