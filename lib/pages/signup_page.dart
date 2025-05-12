@@ -171,6 +171,11 @@ class SignUpPage extends StatelessWidget {
     } catch (e) {
       // 오류 처리
       print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('회원가입에 실패했습니다. 다시 시도해주세요.'),
+        ),
+      );
     }
   }
 }

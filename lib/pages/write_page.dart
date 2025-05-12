@@ -144,7 +144,8 @@ class _WritePageState extends State<WritePage> {
           // 사진첩에서 사진 선택
           final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
 
-          if (pickedFile == null) return;
+          // 선택한 파일이 없으면 종료
+          if (pickedFile == null) exit(0);
           setState(() {
             _pickedImages.add(pickedFile);
           });
