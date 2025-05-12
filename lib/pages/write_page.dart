@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:instagram/widgets/barrier_progress_indicator.dart';
@@ -73,12 +74,14 @@ class _WritePageState extends State<WritePage> {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: Image.network(
-              image.path,
-              width: itemSize,
-              height: itemSize,
-              fit: BoxFit.cover,
-            ),
+            child: kIsWeb
+                ? Image.network(image.path)
+                : Image.file(
+                    File(image.path),
+                    width: itemSize,
+                    height: itemSize,
+                    fit: BoxFit.cover,
+                  ),
           ),
         ),
         Container(
