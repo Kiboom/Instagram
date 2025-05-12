@@ -1,14 +1,14 @@
 {
   "project_info": {
-    "project_number": "171658422182",
-    "firebase_url": "https://lg-dx-school-2-2-default-rtdb.asia-southeast1.firebasedatabase.app",
-    "project_id": "lg-dx-school-2-2",
-    "storage_bucket": "lg-dx-school-2-2.firebasestorage.app"
+    "project_number": "1002913317515",
+    "firebase_url": "https://lg-dx-school-5c26c-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "lg-dx-school-5c26c",
+    "storage_bucket": "lg-dx-school-5c26c.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:171658422182:android:eba9f58801cd91fb6b5167",
+        "mobilesdk_app_id": "1:1002913317515:android:cdf8d6e667f05f60628a8e",
         "android_client_info": {
           "package_name": "com.lgdxschool.instagram"
         }
@@ -16,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDRESl8UXJu8uxTMGRxuRJUZ7SO7ElEONw"
+          "current_key": "AIzaSyCe2SZbO06xL-UrZzku4G7XOjUrfscGeGo"
         }
       ],
       "services": {
