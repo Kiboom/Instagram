@@ -155,23 +155,30 @@ class LoginPage extends StatelessWidget {
     final String password = _passwordController.text;
 
     try {
-      // Step1. FirebaseAuth.instance로 로그인 처리
+      // FirebaseAuth 인증 처리
       final UserCredential credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email, 
+        email: email,
         password: password,
       );
+      print(credential.user?.displayName);
 
-      // Step2. 로그인 성공 시, 피드 화면으로 이동
-      Navigator.of(context).push(
+      // 로그인 성공 시 피드 화면으로 이동
+      Navigator.pushReplacement(
+        context,
         MaterialPageRoute(
           builder: (context) {
             return FeedPage();
           },
         ),
       );
-    } catch (error) {
+    } catch (e) {
       // 에러 처리
-      print(error);
+      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.'),
+        ),
+      );
     }
   }
 }

@@ -15,7 +15,9 @@ class WritePage extends StatelessWidget {
       appBar: _buildAppBar(),
       body: Column(
         children: [
-          Expanded(child: _buildTextField()),
+          Expanded(
+            child: _buildTextField(),
+          ),
           Container(height: 20),
           _buildShareButton(context),
         ],
@@ -49,7 +51,10 @@ class WritePage extends StatelessWidget {
           vertical: 10,
         ),
         hintText: '문구를 작성하거나 설문을 추가하세요...',
-        hintStyle: TextStyle(fontSize: 14, color: Colors.black45),
+        hintStyle: TextStyle(
+          fontSize: 14,
+          color: Colors.black45,
+        ),
         border: InputBorder.none,
       ),
     );
@@ -83,7 +88,30 @@ class WritePage extends StatelessWidget {
     );
   }
 
-  // 사진첩에서 사진을 선택하고 Storage에 업로드하여 이미지 URL을 반환합니다.
+  Future<void> _uploadPost(BuildContext context) async {
+    // TextField가 비어있으면 게시물을 업로드하지 않음
+    if (_textController.text.isEmpty) return;
+
+    // 필요시 사진 업로드
+    String? imageUrl = await _uploadImage(context);
+
+    // Firestore의 posts 컬렉션에 게시물 추가하기
+    final newPost = {
+      'uid': FirebaseAuth.instance.currentUser?.uid,
+      'username': FirebaseAuth.instance.currentUser?.displayName,
+      'description': _textController.text,
+      'createdAt': Timestamp.fromDate(DateTime.now()),
+      'imageUrl': imageUrl,
+    };
+    await FirebaseFirestore.instance.collection('posts').add(newPost);
+
+    // TextField 초기화
+    _textController.clear();
+
+    // 이전 페이지로 이동
+    Navigator.pop(context);
+  }
+
   Future<String?> _uploadImage(BuildContext context) async {
     try {
       // 사진첩에서 사진 선택
@@ -94,58 +122,28 @@ class WritePage extends StatelessWidget {
       if (pickedFile == null) return null;
 
       // Storage에 업로드할 위치 설정하기
-      // 사용자 uid 가져오기
       final String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
-
-      // 임의의 파일 이름 설정하기 (파일명이 서로 겹치지 않는 것이 중요함)
       final String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-
-      // Storage에 업로드할 위치 설정하기 (uid와 fileName의 조합)
       final String pathName = '/user/$uid/$fileName';
 
       // Storage에 업로드
-      FirebaseStorage.instance
-          .ref(pathName)
-          .putData(
+      await FirebaseStorage.instance.ref(pathName).putData(
             await pickedFile.readAsBytes(),
-            SettableMetadata(contentType: "image/jpeg"),
+            SettableMetadata(
+              contentType: pickedFile.mimeType,
+            ),
           );
 
       // 업로드된 파일의 URL 가져오기
-      final uploadedUrl =
-          await FirebaseStorage.instance.ref(pathName).getDownloadURL();
-      print(uploadedUrl);
-      // 업로드된 파일의 URL 반환
-      return uploadedUrl;
+      String downloadURL = await FirebaseStorage.instance.ref(pathName).getDownloadURL();
+      return downloadURL;
     } catch (e) {
       // 오류 처리
       print(e);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('이미지 업로드에 실패했습니다.'),
+      ));
       return null;
     }
-  }
-
-  Future<void> _uploadPost(BuildContext context) async {
-    // TextField가 비어있으면 게시물을 업로드하지 않음
-    if (_textController.text.isEmpty) return;
-
-    // 사진첩에서 사진 선택 및 업로드
-    String? imageUrl = await _uploadImage(context);
-
-    final newPost = {
-      'uid': FirebaseAuth.instance.currentUser?.uid,
-      'username': FirebaseAuth.instance.currentUser?.displayName,
-      'description': _textController.text,
-      'createdAt': Timestamp.fromDate(DateTime.now()),
-      'imageUrl': imageUrl,
-    };
-
-    // Firestore의 posts 컬렉션에 게시물 추가하기
-    await FirebaseFirestore.instance.collection("posts").add(newPost);
-
-    // TextField 초기화
-    _textController.clear();
-
-    // 이전 페이지로 이동
-    Navigator.of(context).pop();
   }
 }

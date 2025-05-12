@@ -149,15 +149,13 @@ class SignUpPage extends StatelessWidget {
 
   Future<void> _signUp(BuildContext context) async {
     try {
-      final email = _emailController.text.trim();
-      final password = _passwordController.text.trim();
-      final nickName = _nickNameController.text.trim();
+      final String email = _emailController.text.trim();
+      final String password = _passwordController.text.trim();
+      final String nickName = _nickNameController.text.trim();
 
       // 과제1: 회원가입 처리
-      final UserCredential credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-	      email: email, 
-	      password: password
-	    );
+      final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+      credential.user?.updateDisplayName(nickName);
 
       // 과제2: 닉네임 업데이트
       await credential.user?.updateDisplayName(nickName);
