@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/pages/feed_page.dart';
 import 'package:instagram/pages/signup_page.dart';
 
 class LoginPage extends StatelessWidget {
@@ -153,11 +155,23 @@ class LoginPage extends StatelessWidget {
     final String password = _passwordController.text;
 
     try {
-      // FirebaseAuth 인증 처리
+      // Step1. FirebaseAuth.instance로 로그인 처리
+      final UserCredential credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email, 
+        password: password,
+      );
 
-      // 로그인 성공 시 피드 화면으로 이동
-    } catch (e) {
+      // Step2. 로그인 성공 시, 피드 화면으로 이동
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) {
+            return FeedPage();
+          },
+        ),
+      );
+    } catch (error) {
       // 에러 처리
+      print(error);
     }
   }
 }

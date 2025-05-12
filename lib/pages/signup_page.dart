@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/pages/feed_page.dart';
 
@@ -150,14 +151,19 @@ class SignUpPage extends StatelessWidget {
     try {
       final email = _emailController.text.trim();
       final password = _passwordController.text.trim();
+      final nickName = _nickNameController.text.trim();
 
       // 과제1: 회원가입 처리
+      final UserCredential credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+	      email: email, 
+	      password: password
+	    );
 
       // 과제2: 닉네임 업데이트
+      await credential.user?.updateDisplayName(nickName);
 
       // 로그인 성공 시 피드 화면으로 이동
-      Navigator.pushReplacement(
-        context,
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) {
             return FeedPage();
