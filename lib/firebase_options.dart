@@ -47,32 +47,32 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBfCnJPB50sF_XQKFKGY_krbCvZRs2xLHA',
-    appId: '1:1002913317515:web:e0df117e5a1dfe32628a8e',
-    messagingSenderId: '1002913317515',
-    projectId: 'lg-dx-school-5c26c',
-    authDomain: 'lg-dx-school-5c26c.firebaseapp.com',
-    databaseURL: 'https://lg-dx-school-5c26c-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'lg-dx-school-5c26c.firebasestorage.app',
-    measurementId: 'G-B6EJPR8M08',
+    apiKey: 'AIzaSyD1ua8my7DLW-lreLvdvjKnHKIHcTkOny0',
+    appId: '1:171658422182:web:deb4772d3c55e1a56b5167',
+    messagingSenderId: '171658422182',
+    projectId: 'lg-dx-school-2-2',
+    authDomain: 'lg-dx-school-2-2.firebaseapp.com',
+    databaseURL: 'https://lg-dx-school-2-2-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'lg-dx-school-2-2.firebasestorage.app',
+    measurementId: 'G-RPMZNTFSZK',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCe2SZbO06xL-UrZzku4G7XOjUrfscGeGo',
-    appId: '1:1002913317515:android:cdf8d6e667f05f60628a8e',
-    messagingSenderId: '1002913317515',
-    projectId: 'lg-dx-school-5c26c',
-    databaseURL: 'https://lg-dx-school-5c26c-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'lg-dx-school-5c26c.firebasestorage.app',
+    apiKey: 'AIzaSyDRESl8UXJu8uxTMGRxuRJUZ7SO7ElEONw',
+    appId: '1:171658422182:android:eba9f58801cd91fb6b5167',
+    messagingSenderId: '171658422182',
+    projectId: 'lg-dx-school-2-2',
+    databaseURL: 'https://lg-dx-school-2-2-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'lg-dx-school-2-2.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDNWnXWUvRCKvtbLO7Um75_ZcCLJrHXKqk',
-    appId: '1:1002913317515:ios:e0be094b59c84273628a8e',
-    messagingSenderId: '1002913317515',
-    projectId: 'lg-dx-school-5c26c',
-    databaseURL: 'https://lg-dx-school-5c26c-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'lg-dx-school-5c26c.firebasestorage.app',
+    apiKey: 'AIzaSyDspZ148weAuEJ7-3RDJbWaJ33LVhV-rIc',
+    appId: '1:171658422182:ios:3bc0c028fc417b346b5167',
+    messagingSenderId: '171658422182',
+    projectId: 'lg-dx-school-2-2',
+    databaseURL: 'https://lg-dx-school-2-2-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'lg-dx-school-2-2.firebasestorage.app',
     iosBundleId: 'com.lgdxschool.instagram',
   );
 
