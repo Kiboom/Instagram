@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
@@ -10,29 +11,47 @@ import 'package:instagram/pages/feed_page.dart';
 import 'package:instagram/pages/login_page.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
 
-  // Firebase 초기화
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+      // Firebase 초기화
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+
+      // Firebase Remote Config 설정
+      await FirebaseRemoteConfig.instance.setConfigSettings(
+        RemoteConfigSettings(
+          fetchTimeout: const Duration(seconds: 10),
+          minimumFetchInterval: const Duration(hours: 0),
+        ),
+      );
+      await FirebaseRemoteConfig.instance.fetchAndActivate();
+
+      // 앱의 라이프사이클 이벤트를 감지합니다.
+      AppLifecycleListener(
+        onShow: () => _notifyActiveState(),
+        onHide: () => _notifyDeactiveState(),
+      );
+
+      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+
+      runApp(const InstagramApp());
+      // FirebaseCrashlytics.instance.crash();
+      // throw "Test Crash";
+    },
+    (exception, stacktrace) async {
+      print('Uncaught error: $exception');
+      print(stacktrace);
+      await FirebaseCrashlytics.instance.recordFlutterFatalError(
+        FlutterErrorDetails(
+          exception: exception,
+          stack: stacktrace,
+        ),
+      );
+    },
   );
-
-  // Firebase Remote Config 설정
-  await FirebaseRemoteConfig.instance.setConfigSettings(
-    RemoteConfigSettings(
-      fetchTimeout: const Duration(seconds: 10),
-      minimumFetchInterval: const Duration(hours: 0),
-    ),
-  );
-  await FirebaseRemoteConfig.instance.fetchAndActivate();
-
-  // 앱의 라이프사이클 이벤트를 감지합니다.
-  AppLifecycleListener(
-    onShow: () => _notifyActiveState(),
-    onHide: () => _notifyDeactiveState(),
-  );
-
-  runApp(const InstagramApp());
 }
 
 class InstagramApp extends StatelessWidget {

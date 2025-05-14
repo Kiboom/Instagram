@@ -3,26 +3,26 @@
         "platforms": {
             "android": {
                 "default": {
-                    "projectId": "lg-dx-school-2-2",
-                    "appId": "1:171658422182:android:eba9f58801cd91fb6b5167",
+                    "projectId": "lg-dx-school-5c26c",
+                    "appId": "1:1002913317515:android:cdf8d6e667f05f60628a8e",
                     "fileOutput": "android/app/google-services.json"
                 }
             },
             "dart": {
                 "lib/firebase_options.dart": {
-                    "projectId": "lg-dx-school-2-2",
+                    "projectId": "lg-dx-school-5c26c",
                     "configurations": {
-                        "android": "1:171658422182:android:eba9f58801cd91fb6b5167",
-                        "ios": "1:171658422182:ios:3bc0c028fc417b346b5167",
-                        "web": "1:171658422182:web:deb4772d3c55e1a56b5167"
+                        "android": "1:1002913317515:android:cdf8d6e667f05f60628a8e",
+                        "ios": "1:1002913317515:ios:e0be094b59c84273628a8e",
+                        "web": "1:1002913317515:web:e0df117e5a1dfe32628a8e"
                     }
                 }
             },
             "ios": {
                 "default": {
-                    "projectId": "lg-dx-school-2-2",
-                    "appId": "1:171658422182:ios:3bc0c028fc417b346b5167",
-                    "uploadDebugSymbols": false,
+                    "projectId": "lg-dx-school-5c26c",
+                    "appId": "1:1002913317515:ios:e0be094b59c84273628a8e",
+                    "uploadDebugSymbols": true,
                     "fileOutput": "ios/Runner/GoogleService-Info.plist"
                 }
             }

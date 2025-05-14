@@ -143,7 +143,7 @@ PODS:
     - FirebaseSharedSwift (~> 11.0)
     - GoogleUtilities/Environment (~> 8.0)
     - "GoogleUtilities/NSData+zlib (~> 8.0)"
-  - FirebaseRemoteConfigInterop (11.4.0)
+  - FirebaseRemoteConfigInterop (11.12.0)
   - FirebaseSessions (11.3.0):
     - FirebaseCore (~> 11.0)
     - FirebaseCoreExtension (~> 11.0)
@@ -350,7 +350,7 @@ SPEC CHECKSUMS:
   FirebaseFirestoreInternalBinary: 4cf8180574159f20a2861a6e5c7e86745e4626d8
   FirebaseInstallations: 6ef4a1c7eb2a61ee1f74727d7f6ce2e72acf1414
   FirebaseRemoteConfig: fca0b2d017fc1de52b28a4e5bcf2007c1a840457
-  FirebaseRemoteConfigInterop: e76f46ffa4d6a65e273d4dfebb6a79e588cec136
+  FirebaseRemoteConfigInterop: 82b81fd06ee550cbeff40004e2c106daedf73e38
   FirebaseSessions: 655ff17f3cc1a635cbdc2d69b953878001f9e25b
   FirebaseSharedSwift: 7a0d78d155ede78407f0fdc89fbc914014c7c540
   FirebaseStorage: 9353f926690b2329957860abfcbc8b4074fe45e8

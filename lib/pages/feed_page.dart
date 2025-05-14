@@ -24,8 +24,11 @@ class _FeedPageState extends State<FeedPage> {
   void initState() {
     super.initState();
 
-    _loadPosts();
-    _loadActiveUsers();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadPosts();
+      _loadActiveUsers();
+      _loadNotice();
+    });
   }
 
   @override
@@ -210,6 +213,40 @@ class _FeedPageState extends State<FeedPage> {
             event.snapshot.value as List<dynamic>,
           );
         });
+      },
+    );
+  }
+
+  // 공지사항을 받아옵니다.
+  Future<void> _loadNotice() async {
+    final notice = FirebaseRemoteConfig.instance.getString('notice');
+    if (notice.isEmpty) {
+      return;
+    }
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CupertinoAlertDialog(
+          title: const Text('공지사항'),
+          content: Container(
+            margin: const EdgeInsets.only(top: 10),
+            child: Text(notice),
+          ),
+          actions: [
+            CupertinoButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text(
+                '확인',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
       },
     );
   }
