@@ -8,7 +8,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1002913317515:android:cdf8d6e667f05f60628a8e",
+        "mobilesdk_app_id": "1:171658422182:android:eba9f58801cd91fb6b5167",
         "android_client_info": {
           "package_name": "com.lgdxschool.instagram"
         }
@@ -16,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCe2SZbO06xL-UrZzku4G7XOjUrfscGeGo"
+          "current_key": "AIzaSyDRESl8UXJu8uxTMGRxuRJUZ7SO7ElEONw"
         }
       ],
       "services": {
