@@ -74,4 +74,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'lg-dx-school-2-2.firebasestorage.app',
     iosBundleId: 'com.lgdxschool.instagram',
   );
+
 }
