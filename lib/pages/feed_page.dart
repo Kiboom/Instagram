@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -165,6 +166,11 @@ class _FeedPageState extends State<FeedPage> {
                   },
                 ),
               );
+
+              // Google Analytics 이벤트 로깅
+              await FirebaseAnalytics.instance.logEvent(
+                name: 'logout',
+              );
             },
           ),
         )
@@ -209,9 +215,11 @@ class _FeedPageState extends State<FeedPage> {
     FirebaseDatabase.instance.ref().child('active_users').onValue.listen(
       (event) {
         setState(() {
-          _activeUsers = List<String?>.from(
-            event.snapshot.value as List<dynamic>,
-          );
+          _activeUsers = event.snapshot.value == null
+              ? []
+              : List<String?>.from(
+                  event.snapshot.value as List<dynamic>,
+                );
         });
       },
     );
