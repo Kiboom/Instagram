@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "875531806733",
+    "project_id": "lg-dx-school-3-2",
+    "storage_bucket": "lg-dx-school-3-2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:875531806733:android:dacb8728ef901a41850d44",
+        "android_client_info": {
+          "package_name": "com.lgdxschool.instagram"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCI6iJ1x2sisRWZn874cODrqiJFW8I9ON8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
