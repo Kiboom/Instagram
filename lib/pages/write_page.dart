@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -201,7 +200,6 @@ class _WritePageState extends State<WritePage> {
       child: RoundedInkWell(
         onTap: () {
           if (_textController.text.isEmpty) {
-            FirebaseCrashlytics.instance.crash();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('게시물을 입력해주세요.'),
