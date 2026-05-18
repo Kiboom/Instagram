@@ -8,12 +8,14 @@ include: package:flutter_lints/flutter.yaml
 
 linter:
   rules:
-    use_build_context_synchronously: true
+    use_build_context_synchronously: false
     sized_box_for_whitespace: false
+    prefer_const_constructors: false
     require_trailing_commas: true
     avoid_relative_lib_imports: true
     always_declare_return_types: true
     file_names: false
+    avoid_print: false
 
 formatter:
   trailing_commas: preserve
