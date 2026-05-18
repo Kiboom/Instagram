@@ -19,9 +19,7 @@ class InstagramApp extends StatelessWidget {
     return MaterialApp(
       title: 'Instagram',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.pinkAccent,
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.pinkAccent),
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
