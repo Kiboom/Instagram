@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Post {
   final String uid;
   final String username;
-  final String imageUrl;
+  final String? imageUrl;
   final String description;
   final List<Like> likes;
   final List<Comment> comments;
@@ -13,7 +13,7 @@ class Post {
     required this.uid,
     required this.username,
     required this.description,
-    required this.imageUrl,
+    this.imageUrl,
     this.likes = const [],
     this.comments = const [],
     required Timestamp createdAt,
@@ -41,10 +41,7 @@ class Like {
   final String uid;
   final String username;
 
-  Like({
-    required this.uid,
-    required this.username,
-  });
+  Like({required this.uid, required this.username});
 }
 
 class Comment {
@@ -53,10 +50,5 @@ class Comment {
   final String comment;
   final DateTime createdAt;
 
-  Comment({
-    required this.uid,
-    required this.username,
-    required this.comment,
-    required this.createdAt,
-  });
+  Comment({required this.uid, required this.username, required this.comment, required this.createdAt});
 }
