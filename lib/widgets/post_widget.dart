@@ -1,6 +1,7 @@
-import "package:firebase_auth/firebase_auth.dart";
-import "package:flutter/material.dart";
-import "package:instagram/data/post.dart";
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:instagram/data/post.dart';
 
 class PostWidget extends StatefulWidget {
   const PostWidget({
@@ -15,11 +16,6 @@ class PostWidget extends StatefulWidget {
 }
 
 class _PostWidgetState extends State<PostWidget> {
-  bool get _isLikedByCurrentUser {
-    final String? displayName = FirebaseAuth.instance.currentUser?.displayName;
-    return widget.item.likes.any((like) => like.username == displayName);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,34 +25,28 @@ class _PostWidgetState extends State<PostWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeader(),
+          _buildProfileImage(),
           Container(height: 12),
           _buildImage(),
           Container(height: 12),
-          _buildActionButtons(),
+          _buildIcons(),
           Container(height: 12),
-          _buildLikesCount(),
-          Container(height: 4),
-          _buildDescription(),
-          Container(height: 4),
-          _buildCommentsLink(),
-          Container(height: 4),
-          _buildTimeAgo(),
+          _buildLikeAndComments(),
         ],
       ),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildProfileImage() {
     return Row(
       children: [
-        const CircleAvatar(
+        CircleAvatar(
           radius: 16,
         ),
         Container(width: 8),
         Text(
           widget.item.username,
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
           ),
@@ -66,34 +56,67 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   Widget _buildImage() {
+    if (widget.item.imageUrl == null) {
+      return const SizedBox.shrink();
+    }
     return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
-      child: Image.network(
-        widget.item.imageUrl,
+      borderRadius: BorderRadius.circular(8),
+      child: CachedNetworkImage(
+        imageUrl: widget.item.imageUrl ?? "",
+        placeholder: (context, url) {
+          return Container(
+            height: 400,
+            alignment: Alignment.center,
+            color: Colors.black.withValues(alpha: 0.03),
+            child: Container(
+              width: 30,
+              height: 30,
+              child: const CircularProgressIndicator(
+                strokeWidth: 1.0,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.black45),
+                strokeCap: StrokeCap.round,
+              ),
+            ),
+          );
+        },
+        errorWidget: (context, url, error) {
+          return Container(
+            height: 300,
+            alignment: Alignment.center,
+            child: const Icon(
+              Icons.error,
+              size: 56,
+              color: Colors.black54,
+            ),
+          );
+        },
         width: double.infinity,
-        height: 400,
+        height: 300,
         fit: BoxFit.cover,
       ),
     );
   }
 
-  Widget _buildActionButtons() {
-    final bool isLiked = _isLikedByCurrentUser;
+  Widget _buildIcons() {
     return Row(
       children: [
         Icon(
-          isLiked ? Icons.favorite : Icons.favorite_border,
+          widget.item.likes.any((like) => like.username == FirebaseAuth.instance.currentUser?.displayName)
+              ? Icons.favorite
+              : Icons.favorite_border,
           size: 26,
-          color: isLiked ? Colors.red : Colors.black,
+          color: widget.item.likes.any((like) => like.username == FirebaseAuth.instance.currentUser?.displayName)
+              ? Colors.red
+              : Colors.black,
         ),
         Container(width: 20),
-        const Icon(
+        Icon(
           Icons.chat_bubble_outline,
           size: 24,
         ),
         Container(width: 20),
         const Spacer(),
-        const Icon(
+        Icon(
           Icons.bookmark_border,
           size: 26,
         ),
@@ -101,40 +124,39 @@ class _PostWidgetState extends State<PostWidget> {
     );
   }
 
-  Widget _buildLikesCount() {
-    return Text(
-      "좋아요 ${widget.item.likes.length}개",
-      style: const TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.bold,
-      ),
-    );
-  }
-
-  Widget _buildDescription() {
-    return Text(
-      widget.item.description,
-      style: const TextStyle(
-        color: Colors.black,
-      ),
-    );
-  }
-
-  Widget _buildCommentsLink() {
-    return Text(
-      "댓글 ${widget.item.comments.length}개 모두 보기",
-      style: const TextStyle(
-        color: Colors.black54,
-      ),
-    );
-  }
-
-  Widget _buildTimeAgo() {
-    return Text(
-      widget.item.timeAgo,
-      style: const TextStyle(
-        color: Colors.black54,
-      ),
+  Widget _buildLikeAndComments() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '좋아요 ${widget.item.likes.length}개',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Container(height: 4),
+        Text(
+          widget.item.description,
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+        Container(height: 4),
+        Text(
+          '댓글 ${widget.item.comments.length}개 모두 보기',
+          style: TextStyle(
+            color: Colors.black54,
+          ),
+        ),
+        Container(height: 4),
+        Text(
+          widget.item.timeAgo,
+          style: TextStyle(
+            color: Colors.black54,
+          ),
+        ),
+      ],
     );
   }
 }
