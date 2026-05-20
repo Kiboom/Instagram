@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/firebase_options.dart';
+import 'package:instagram/pages/feed_page.dart';
 import 'package:instagram/pages/login_page.dart';
 
 void main() async {
@@ -17,6 +19,7 @@ class InstagramApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // FirebaseAuth로부터 현재 로그인한 사용자 정보를 가져옵니다.
+    final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
 
     // 만약 사용자가 로그인하지 않은 상태라면 `로그인 페이지`를 보여줍니다.
     // 만약 사용자가 로그인한 상태라면 `홈 페이지`를 보여줍니다.
@@ -30,7 +33,7 @@ class InstagramApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: isLoggedIn ? FeedPage() : LoginPage(),
     );
   }
 }

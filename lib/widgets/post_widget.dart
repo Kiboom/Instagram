@@ -56,7 +56,7 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   Widget _buildImage() {
-    if (widget.item.imageUrl == null) {
+    if (widget.item.imageUrl?.isEmpty == true) {
       return const SizedBox.shrink();
     }
     return ClipRRect(
@@ -81,7 +81,7 @@ class _PostWidgetState extends State<PostWidget> {
         },
         errorWidget: (context, url, error) {
           return Container(
-            height: 300,
+            height: 400,
             alignment: Alignment.center,
             child: const Icon(
               Icons.error,
