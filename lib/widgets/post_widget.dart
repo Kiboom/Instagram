@@ -16,6 +16,8 @@ class PostWidget extends StatefulWidget {
 }
 
 class _PostWidgetState extends State<PostWidget> {
+  final double _imageHeight = 400.0;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -63,36 +65,44 @@ class _PostWidgetState extends State<PostWidget> {
       borderRadius: BorderRadius.circular(8),
       child: CachedNetworkImage(
         imageUrl: widget.item.imageUrl ?? "",
+        width: double.infinity,
+        height: _imageHeight,
+        fit: BoxFit.cover,
         placeholder: (context, url) {
-          return Container(
-            height: 400,
-            alignment: Alignment.center,
-            color: Colors.black.withValues(alpha: 0.03),
-            child: Container(
-              width: 30,
-              height: 30,
-              child: const CircularProgressIndicator(
-                strokeWidth: 1.0,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.black45),
-                strokeCap: StrokeCap.round,
-              ),
-            ),
-          );
+          return _buildPlaceholderImage();
         },
         errorWidget: (context, url, error) {
-          return Container(
-            height: 400,
-            alignment: Alignment.center,
-            child: const Icon(
-              Icons.error,
-              size: 56,
-              color: Colors.black54,
-            ),
-          );
+          return _buildErrorImage();
         },
-        width: double.infinity,
-        height: 300,
-        fit: BoxFit.cover,
+      ),
+    );
+  }
+
+  Widget _buildErrorImage() {
+    return Container(
+      height: _imageHeight,
+      alignment: Alignment.center,
+      child: const Icon(
+        Icons.error,
+        size: 56,
+        color: Colors.black54,
+      ),
+    );
+  }
+
+  Widget _buildPlaceholderImage() {
+    return Container(
+      height: _imageHeight,
+      alignment: Alignment.center,
+      color: Colors.black.withValues(alpha: 0.03),
+      child: Container(
+        width: 30,
+        height: 30,
+        child: const CircularProgressIndicator(
+          strokeWidth: 1.0,
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.black45),
+          strokeCap: StrokeCap.round,
+        ),
       ),
     );
   }
