@@ -44,6 +44,28 @@ class FeedPageState extends State<FeedPage> {
           ),
         ),
       ),
+      floatingActionButton: _buildOnlineGameButton(),
+    );
+  }
+
+  Widget _buildOnlineGameButton() {
+    return FloatingActionButton(
+      backgroundColor: Colors.black,
+      child: const Icon(
+        Icons.play_arrow_rounded,
+        color: Colors.white,
+        size: 32,
+      ),
+      onPressed: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            fullscreenDialog: true,
+            builder: (context) {
+              return const OnlineGamePage();
+            },
+          ),
+        );
+      },
     );
   }
 
