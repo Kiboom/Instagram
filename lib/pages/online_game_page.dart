@@ -135,20 +135,6 @@ class OnlineGamePageState extends State<OnlineGamePage> {
           ),
         ),
         Container(height: 24),
-        ElevatedButton(
-          onPressed: () {
-            setState(() {
-              showResult = true;
-            });
-          },
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            child: const Text(
-              '결과 보기',
-              style: TextStyle(fontSize: 18),
-            ),
-          ),
-        ),
       ],
     );
   }
@@ -242,20 +228,20 @@ class OnlineGamePageState extends State<OnlineGamePage> {
   /// 게임 데이터가 업데이트 되었을 때 호출되는 함수입니다.
   void onGameUpdate(DatabaseEvent event) {
     // Realtime Database에서 수신한 데이터를 GameData로 변환합니다.
-    final GameData gameData = GameData.fromMap(event.snapshot.value as Map?);
+    final GameData newGameData = GameData.fromMap(event.snapshot.value as Map?);
 
     // 게임이 시작되면 카운트다운을 시작합니다.
-    if (gameData.status == GameStatus.START) {
-      startCountdown(gameData.timeout);
+    if (newGameData.status == GameStatus.START && gameStatus != GameStatus.START) {
+      startCountdown(newGameData.timeout);
       myCount = 0;
     }
 
     // 새로운 게임 데이터를 UI에 반영합니다.
     setState(() {
-      gameStatus = gameData.status;
-      gameTimeout = gameData.timeout;
-      gameResult = gameData.result;
-      if (gameData.status != GameStatus.END) {
+      gameStatus = newGameData.status;
+      gameTimeout = newGameData.timeout;
+      gameResult = newGameData.result;
+      if (newGameData.status != GameStatus.END) {
         showResult = false;
         revealedRank = null;
       }
@@ -275,6 +261,7 @@ class OnlineGamePageState extends State<OnlineGamePage> {
     // Realtime Database에 내가 입력한 한 횟수를 업데이트합니다.
     final myName = FirebaseAuth.instance.currentUser?.displayName;
     final databasePath = 'game/game_result/$myName';
-    // TODO: Realtime Database에 데이터를 업데이트 하는 코드를 마저 완성해보세요!
+
+    // TODO: Realtime Database의 path 위치에 나의 엔터 횟수를 업데이트 합니다!
   }
 }
