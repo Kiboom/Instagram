@@ -16,7 +16,7 @@ class FeedPage extends StatefulWidget {
 
 class FeedPageState extends State<FeedPage> {
   List<Post> _posts = [];
-  List<String?> _activeUsers = [];
+  List<String?> _loggedInUsers = [];
 
   @override
   void initState() {
@@ -109,7 +109,7 @@ class FeedPageState extends State<FeedPage> {
         padding: const EdgeInsets.symmetric(horizontal: 10),
         scrollDirection: Axis.horizontal,
         children: [
-          for (final userName in _activeUsers) _buildActiveUserCircle(userName),
+          for (final userName in _loggedInUsers) _buildActiveUserCircle(userName),
         ],
       ),
     );
