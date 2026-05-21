@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,7 +19,7 @@ class WritePage extends StatefulWidget {
 
 class _WritePageState extends State<WritePage> {
   bool _isLoading = false;
-  List<File> _pickedImages = [];
+  XFile? _pickedImage;
 
   final TextEditingController _textController = TextEditingController();
 
@@ -50,9 +53,9 @@ class _WritePageState extends State<WritePage> {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.only(left: 16, right: 100),
         children: [
-          for (final image in _pickedImages)
+          if (_pickedImage != null)
             _buildSelectedImage(
-              image,
+              _pickedImage!,
               itemSize,
             ),
         ],
@@ -60,7 +63,7 @@ class _WritePageState extends State<WritePage> {
     );
   }
 
-  Widget _buildSelectedImage(File image, double itemSize) {
+  Widget _buildSelectedImage(XFile image, double itemSize) {
     return Stack(
       alignment: Alignment.topRight,
       children: [
@@ -99,7 +102,7 @@ class _WritePageState extends State<WritePage> {
               ),
               onPressed: () {
                 setState(() {
-                  _pickedImages.remove(image);
+                  _pickedImage = null;
                 });
               },
             ),
@@ -118,7 +121,7 @@ class _WritePageState extends State<WritePage> {
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             offset: Offset(0, 4),
             blurRadius: 20,
           ),
@@ -135,7 +138,7 @@ class _WritePageState extends State<WritePage> {
           color: Colors.white,
         ),
         onPressed: () async {
-          if (_pickedImages.isNotEmpty) {
+          if (_pickedImage != null) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('이미지는 최대 1개까지 선택 가능합니다.'),
@@ -146,11 +149,11 @@ class _WritePageState extends State<WritePage> {
           }
 
           // 사진첩에서 사진 선택
-          final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-
+          final pickedFile = await _pickImage();
           if (pickedFile == null) return;
+
           setState(() {
-            _pickedImages.add(File(pickedFile.path));
+            _pickedImage = pickedFile;
           });
         },
       ),
@@ -231,18 +234,95 @@ class _WritePageState extends State<WritePage> {
   }
 
   Future<void> _uploadPost(BuildContext context) async {
-    // TextField가 비어있으면 게시물을 업로드하지 않음
-    final String text = _textController.text;
-    if (text.isEmpty) {
-      return;
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      // TextField가 비어있으면 게시물을 업로드하지 않음
+      final String text = _textController.text;
+
+      if (text.isEmpty) {
+        return;
+      }
+
+      final imageUrl = await _uploadImage(context);
+
+      // Firestore의 posts 컬렉션에 게시물 추가하기
+      final newPost = {
+        'uid': FirebaseAuth.instance.currentUser?.uid,
+        'username': FirebaseAuth.instance.currentUser?.displayName,
+        'image_url': imageUrl ?? '',
+        'description': _textController.text,
+        'created_at': Timestamp.fromDate(DateTime.now()),
+      };
+
+      await FirebaseFirestore.instance
+          .collection("posts") // 데이터를 추가할 콜렉션을 지정합니다.
+          .add(newPost); // 해당 콜렉션에 데이터를 추가합니다.
+
+      // TextField 초기화
+      _textController.clear();
+
+      // 이전 페이지로 이동
+      Navigator.pop(context);
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
+  }
 
-    // Firestore의 posts 컬렉션에 게시물 추가하기
+  Future<XFile?> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile == null) {
+      return null;
+    } else {
+      return pickedFile;
+    }
+  }
 
-    // TextField 초기화
-    _textController.clear();
+  // 사진첩에서 사진을 선택하고 Storage에 업로드하여 이미지 URL을 반환합니다.
+  Future<String?> _uploadImage(BuildContext context) async {
+    try {
+      // 선택한 사진이 없다면 사진첩에서 사진을 선택
+      if (_pickedImage == null) {
+        _pickedImage = await _pickImage();
+      }
 
-    // 이전 페이지로 이동
-    Navigator.pop(context);
+      // 여전히 선택한 파일이 없다면 종료
+      if (_pickedImage == null) {
+        return null;
+      }
+
+      // Storage에 업로드할 위치 설정하기
+      // 사용자 uid 가져오기
+      final String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+      // 임의의 파일 이름 설정하기 (파일명이 서로 겹치지 않는 것이 중요함)
+      final String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+      // Storage에 업로드할 위치 설정하기 (uid와 fileName의 조합)
+      final String pathName = '/user/$uid/$fileName';
+
+      // Storage에 업로드 (웹과 앱은 다르게 처리해야 함)
+      if (kIsWeb) {
+        final fileData = await _pickedImage!.readAsBytes();
+        final metaData = SettableMetadata(contentType: _pickedImage!.mimeType);
+        await FirebaseStorage.instance.ref(pathName).putData(fileData, metaData);
+      } else {
+        final file = File(_pickedImage!.path);
+        await FirebaseStorage.instance.ref(pathName).putFile(file);
+      }
+
+      // 업로드된 파일의 URL 가져오기
+      final String imageUrl = await FirebaseStorage.instance.ref(pathName).getDownloadURL();
+      return imageUrl;
+    } catch (e) {
+      // 오류 처리
+      print(e);
+      return null;
+    }
   }
 }
