@@ -23,6 +23,14 @@ class FeedPageState extends State<FeedPage> {
   void initState() {
     super.initState();
     _loadPosts();
+    _loadLoggedInUsers();
+    _reportLoggedIn();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _reportLoggedOut();
   }
 
   @override
@@ -207,5 +215,54 @@ class FeedPageState extends State<FeedPage> {
     setState(() {
       _posts = posts;
     });
+  }
+
+  // 활동 중인 사용자 목록을 받아옵니다.
+  Future<void> _loadLoggedInUsers() async {
+    FirebaseDatabase.instance
+        .ref() // 실시간 정보를 받아오는 객체
+        .child('logged_in_users') // logged_in_users 데이터에 접근
+        .onValue
+        .listen(_onUpdatedUsers); // logged_in_users 데이터를 관찰
+  }
+
+  // 활동 중인 사용자에 변경이 생길 때마다 호출되는 함수
+  void _onUpdatedUsers(DatabaseEvent event) {
+    // Realtime DB에 업데이트 된 내역을 받아옵니다.
+    final List? snapshot = event.snapshot.value as List?;
+
+    // 업데이트 된 내역을 유저 리스트로 변환해줍니다.
+    final List<String?> users = List<String?>.from(snapshot ?? []);
+
+    // 새로운 유저 리스트를 UI에 반영합니다.
+    setState(() {
+      _loggedInUsers = users;
+    });
+  }
+
+  // 나의 접속 상태를 알립니다.
+  Future<void> _reportLoggedIn() async {
+    // Realtime Database에서 현재 접속한 사람들을 조회합니다.
+
+    // 현재 접속한 사람들을 List 형태로 변환합니다.
+
+    // 나의 닉네임 가져오기
+
+    // 나의 이름이 현재 접속한 사람들 목록에 없다면 추가합니다.
+
+    // Realtime Database에 접속한 사람들을 업데이트합니다.
+  }
+
+  // 나의 미접속 상태를 알립니다.
+  Future<void> _reportLoggedOut() async {
+    // Realtime Database에서 현재 접속한 사람들을 조회합니다.
+
+    // 현재 접속한 사람들을 List 형태로 변환합니다.
+
+    // 나의 닉네임 가져오기
+
+    // 나의 이름이 현재 접속한 사람들 목록에 있다면, 리스트에서 제거합니다.
+
+    // Realtime Database에 접속한 사람들을 업데이트합니다.
   }
 }
