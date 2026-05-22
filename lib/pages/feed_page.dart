@@ -243,26 +243,41 @@ class FeedPageState extends State<FeedPage> {
   // 나의 접속 상태를 알립니다.
   Future<void> _reportLoggedIn() async {
     // Realtime Database에서 현재 접속한 사람들을 조회합니다.
+    DatabaseEvent currentData = await FirebaseDatabase.instance.ref().child("logged_in_users").once();
 
     // 현재 접속한 사람들을 List 형태로 변환합니다.
+    final List? snapshot = currentData.snapshot.value as List?;
+    final List<String?> loggedInUsers = snapshot?.cast<String?>() ?? [];
 
     // 나의 닉네임 가져오기
+    final String? myName = FirebaseAuth.instance.currentUser?.displayName;
 
     // 나의 이름이 현재 접속한 사람들 목록에 없다면 추가합니다.
+    if (loggedInUsers.contains(myName) == false) {
+      loggedInUsers.insert(0, myName);
+    }
 
     // Realtime Database에 접속한 사람들을 업데이트합니다.
+    FirebaseDatabase.instance.ref().child("logged_in_users").set(loggedInUsers);
   }
 
   // 나의 미접속 상태를 알립니다.
   Future<void> _reportLoggedOut() async {
     // Realtime Database에서 현재 접속한 사람들을 조회합니다.
+    DatabaseEvent currentData = await FirebaseDatabase.instance.ref().child("logged_in_users").once();
 
     // 현재 접속한 사람들을 List 형태로 변환합니다.
+    List<String?> loggedInUsers = List<String?>.from(currentData.snapshot.value as List<dynamic>);
 
     // 나의 닉네임 가져오기
+    final String? myName = FirebaseAuth.instance.currentUser?.displayName;
 
     // 나의 이름이 현재 접속한 사람들 목록에 있다면, 리스트에서 제거합니다.
+    if (loggedInUsers.contains(myName)) {
+      loggedInUsers.remove(myName);
+    }
 
     // Realtime Database에 접속한 사람들을 업데이트합니다.
+    FirebaseDatabase.instance.ref().child("logged_in_users").set(loggedInUsers);
   }
 }
