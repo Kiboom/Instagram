@@ -17,7 +17,7 @@ class OnlineGamePageState extends State<OnlineGamePage> {
   @override
   void initState() {
     super.initState();
-    // TODO: Realtime Database로부터 게임 데이터를 수신하는 코드를 완성하세요!
+    gameListener = FirebaseDatabase.instance.ref('game').onValue.listen(onGameUpdate);
   }
 
   @override
@@ -135,6 +135,20 @@ class OnlineGamePageState extends State<OnlineGamePage> {
           ),
         ),
         Container(height: 24),
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              showResult = true;
+            });
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            child: const Text(
+              '결과 보기',
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -263,5 +277,6 @@ class OnlineGamePageState extends State<OnlineGamePage> {
     final databasePath = 'game/game_result/$myName';
 
     // TODO: Realtime Database의 path 위치에 나의 엔터 횟수를 업데이트 합니다!
+    FirebaseDatabase.instance.ref(databasePath).set(myCount);
   }
 }
