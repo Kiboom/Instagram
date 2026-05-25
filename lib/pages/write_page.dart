@@ -233,46 +233,6 @@ class _WritePageState extends State<WritePage> {
     );
   }
 
-  Future<void> _uploadPost(BuildContext context) async {
-    try {
-      setState(() {
-        _isLoading = true;
-      });
-
-      // TextField가 비어있으면 게시물을 업로드하지 않음
-      final String text = _textController.text;
-
-      if (text.isEmpty) {
-        return;
-      }
-
-      final imageUrl = await _uploadImage(context);
-
-      // Firestore의 posts 컬렉션에 게시물 추가하기
-      final newPost = {
-        'uid': FirebaseAuth.instance.currentUser?.uid,
-        'username': FirebaseAuth.instance.currentUser?.displayName,
-        'image_url': imageUrl ?? '',
-        'description': _textController.text,
-        'created_at': Timestamp.fromDate(DateTime.now()),
-      };
-
-      await FirebaseFirestore.instance
-          .collection("posts") // 데이터를 추가할 콜렉션을 지정합니다.
-          .add(newPost); // 해당 콜렉션에 데이터를 추가합니다.
-
-      // TextField 초기화
-      _textController.clear();
-
-      // 이전 페이지로 이동
-      Navigator.pop(context);
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
   Future<XFile?> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -323,6 +283,46 @@ class _WritePageState extends State<WritePage> {
       // 오류 처리
       print(e);
       return null;
+    }
+  }
+
+  Future<void> _uploadPost(BuildContext context) async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      // TextField가 비어있으면 게시물을 업로드하지 않음
+      final String text = _textController.text;
+
+      if (text.isEmpty) {
+        return;
+      }
+
+      final imageUrl = await _uploadImage(context);
+
+      // Firestore의 posts 컬렉션에 게시물 추가하기
+      final newPost = {
+        'uid': FirebaseAuth.instance.currentUser?.uid,
+        'username': FirebaseAuth.instance.currentUser?.displayName,
+        'image_url': imageUrl ?? '',
+        'description': _textController.text,
+        'created_at': Timestamp.fromDate(DateTime.now()),
+      };
+
+      await FirebaseFirestore.instance
+          .collection("posts") // 데이터를 추가할 콜렉션을 지정합니다.
+          .add(newPost); // 해당 콜렉션에 데이터를 추가합니다.
+
+      // TextField 초기화
+      _textController.clear();
+
+      // 이전 페이지로 이동
+      Navigator.pop(context);
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 }

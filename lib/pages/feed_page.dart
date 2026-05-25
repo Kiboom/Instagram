@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/data/post.dart';
 import 'package:instagram/pages/login_page.dart';
@@ -279,5 +280,38 @@ class FeedPageState extends State<FeedPage> {
 
     // Realtime Database에 접속한 사람들을 업데이트합니다.
     FirebaseDatabase.instance.ref().child("logged_in_users").set(loggedInUsers);
+  }
+
+  // 공지사항을 RemoteConfig로부터 받아와서 보여줍니다.
+  Future<void> _loadNotice() async {
+    // TODO: RemoteConfig에서 notice 값을 받아와서 다이얼로그로 보여줍니다.
+    String notice = "";
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CupertinoAlertDialog(
+          title: const Text('공지사항'),
+          content: Container(
+            margin: const EdgeInsets.only(top: 10),
+            child: Text(notice),
+          ),
+          actions: [
+            CupertinoButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text(
+                '확인',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
