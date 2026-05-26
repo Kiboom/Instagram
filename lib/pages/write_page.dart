@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -296,6 +298,7 @@ class _WritePageState extends State<WritePage> {
       final String text = _textController.text;
 
       if (text.isEmpty) {
+        FirebaseCrashlytics.instance.crash();
         return;
       }
 
@@ -313,6 +316,14 @@ class _WritePageState extends State<WritePage> {
       await FirebaseFirestore.instance
           .collection("posts") // 데이터를 추가할 콜렉션을 지정합니다.
           .add(newPost); // 해당 콜렉션에 데이터를 추가합니다.
+
+      // 글쓰기 이벤트 수집
+      FirebaseAnalytics.instance.logEvent(
+        name: "write",
+        parameters: {
+          "text_length": text.length,
+        },
+      );
 
       // TextField 초기화
       _textController.clear();
