@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/pages/feed_page.dart';
@@ -148,6 +149,9 @@ class SignUpPage extends StatelessWidget {
       // 과제2: 닉네임 업데이트
       final String displayName = _nickNameController.text.trim();
       await FirebaseAuth.instance.currentUser?.updateDisplayName(displayName);
+
+      // 회원가입 이벤트 수집
+      FirebaseAnalytics.instance.logSignUp(signUpMethod: "email");
 
       // 로그인 성공 시 피드 화면으로 이동
       Navigator.pushReplacement(

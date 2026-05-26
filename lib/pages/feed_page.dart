@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/data/post.dart';
@@ -24,9 +25,12 @@ class FeedPageState extends State<FeedPage> {
   @override
   void initState() {
     super.initState();
-    _loadPosts();
-    _loadLoggedInUsers();
-    _reportLoggedIn();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadPosts();
+      _loadLoggedInUsers();
+      _reportLoggedIn();
+      _loadNotice();
+    });
   }
 
   @override
@@ -284,7 +288,7 @@ class FeedPageState extends State<FeedPage> {
   // 공지사항을 RemoteConfig로부터 받아와서 보여줍니다.
   Future<void> _loadNotice() async {
     // TODO: RemoteConfig에서 notice 값을 받아와서 다이얼로그로 보여줍니다.
-    String notice = "";
+    String notice = FirebaseRemoteConfig.instance.getString('notice');
 
     showDialog(
       context: context,
