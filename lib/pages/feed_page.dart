@@ -9,6 +9,7 @@ import 'package:instagram/pages/login_page.dart';
 import 'package:instagram/pages/online_game_page.dart';
 import 'package:instagram/pages/write_page.dart';
 import 'package:instagram/widgets/post_widget.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
@@ -195,23 +196,21 @@ class FeedPageState extends State<FeedPage> {
   }
 
   Future<void> _loadPosts() async {
-    // FirebaseFirestore로부터 데이터를 받아옵니다.
-    final snapshot = await FirebaseFirestore.instance.collection("posts").orderBy("created_at", descending: true).get();
+    // Supabase로부터 날 것의 posts 데이터를 받아옵니다.
+    final rows = await Supabase.instance.client.from('posts').select().order('created_at', ascending: false);
 
-    // Documents: Firebase Firestore로부터 받아온 날 것의 데이터
-    final documents = snapshot.docs;
-
-    // 과제: FirebaseFirestore로부터 받아온 날 것의 데이터(documents)를 List<Post>객체로 변환합니다.
+    // Supabase로부터 받아온 날 것의 데이터(rows)를 List<Post>객체로 변환합니다.
     List<Post> posts = [];
 
-    for (var document in documents) {
-      // document를 Post 객체로 변환시켜서, posts 리스트에 담아줍니다.
+    for (var row in rows) {
+      // row를 Post 객체로 변환시켜서, posts 리스트에 담아줍니다.
       final post = Post(
-        uid: document.get("uid"),
-        username: document.get("username"),
-        imageUrl: document.get("image_url"),
-        description: document.get("description"),
-        createdAt: document.get("created_at"),
+        id: row["id"],
+        uid: row["uid"],
+        username: row["username"],
+        imageUrl: row["image_url"],
+        description: row["description"],
+        createdAt: Timestamp.fromDate(DateTime.parse(row["created_at"])),
       );
       posts.add(post);
     }

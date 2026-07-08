@@ -1,6 +1,7 @@
 analyzer:
   exclude:
     - lib/layer_data/data_connect/sdk/**
+    - build/**
   errors:
     invalid_annotation_target: ignore
 

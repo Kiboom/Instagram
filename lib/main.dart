@@ -1,52 +1,43 @@
-import 'dart:async';
-
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/firebase_options.dart';
 import 'package:instagram/pages/feed_page.dart';
 import 'package:instagram/pages/login_page.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
-  runZonedGuarded(
-    () async {
-      WidgetsFlutterBinding.ensureInitialized();
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
+  WidgetsFlutterBinding.ensureInitialized();
 
-      // Firebase Remote Config 설정
-      await FirebaseRemoteConfig.instance.setConfigSettings(
-        RemoteConfigSettings(
-          fetchTimeout: const Duration(seconds: 10),
-          minimumFetchInterval: const Duration(hours: 0),
-        ),
-      );
+  try {
+    // Supabase 초기화
+    await Supabase.initialize(
+      url: "https://kstoqjabajxoervnhlxi.supabase.co",
+      anonKey: "sb_publishable_3OiceKxm8ye4IS3HPPX_Rw_uNXvTx8k",
+    );
+  } catch (e, s) {
+    print(e);
+  }
 
-      // Firebase Remote Config 데이터 가져오기
-      await FirebaseRemoteConfig.instance.fetchAndActivate();
-
-      // Flutter에서 발생하는 자잘한 에러들을 Crashlytics로 보내줍니다.
-      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-
-      runApp(const InstagramApp());
-    },
-    (exception, stacktrace) async {
-      print('Uncaught error: $exception');
-      print(stacktrace);
-
-      // 앱이 갑자기 종료되거나 에러가 발생했을 때 Crashlytics로 상세한 내용을 보내줍니다.
-      await FirebaseCrashlytics.instance.recordFlutterFatalError(
-        FlutterErrorDetails(
-          exception: exception,
-          stack: stacktrace,
-        ),
-      );
-    },
+  // Firebase 초기화
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Firebase Remote Config 설정
+  await FirebaseRemoteConfig.instance.setConfigSettings(
+    RemoteConfigSettings(
+      fetchTimeout: const Duration(seconds: 10),
+      minimumFetchInterval: const Duration(hours: 0),
+    ),
+  );
+
+  // Firebase Remote Config 데이터 가져오기
+  await FirebaseRemoteConfig.instance.fetchAndActivate();
+
+  runApp(InstagramApp());
 }
 
 class InstagramApp extends StatelessWidget {

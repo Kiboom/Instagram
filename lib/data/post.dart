@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Post {
+  final int id;
   final String uid;
   final String username;
   final String? imageUrl;
@@ -10,6 +11,7 @@ class Post {
   final DateTime createdAt;
 
   Post({
+    required this.id,
     required this.uid,
     required this.username,
     required this.description,

@@ -1,9 +1,8 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:instagram/widgets/barrier_progress_indicator.dart';
 import 'package:instagram/widgets/haptic_feedback.dart';
 import 'package:instagram/widgets/rounded_inkwell.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class WritePage extends StatefulWidget {
   const WritePage({super.key});
@@ -297,32 +297,26 @@ class _WritePageState extends State<WritePage> {
       // TextField가 비어있으면 게시물을 업로드하지 않음
       final String text = _textController.text;
 
-      if (text.isEmpty) {
-        FirebaseCrashlytics.instance.crash();
-        return;
-      }
-
+      // 이미지를 Storage에 업로드하고 다운로드 URL을 가져옵니다.
       final imageUrl = await _uploadImage(context);
+
+      // 이미지 URL을 사용해서 해시태그를 생성합니다.
+      final hashtags = await _generateHashtags(imageUrl);
 
       // Firestore의 posts 컬렉션에 게시물 추가하기
       final newPost = {
         'uid': FirebaseAuth.instance.currentUser?.uid,
         'username': FirebaseAuth.instance.currentUser?.displayName,
         'image_url': imageUrl ?? '',
-        'description': _textController.text,
-        'created_at': Timestamp.fromDate(DateTime.now()),
+        'description': _textController.text + "\n" + hashtags.toString(),
       };
 
-      await FirebaseFirestore.instance
-          .collection("posts") // 데이터를 추가할 콜렉션을 지정합니다.
-          .add(newPost); // 해당 콜렉션에 데이터를 추가합니다.
+      await Supabase.instance.client.from('posts').insert(newPost);
 
       // 글쓰기 이벤트 수집
       FirebaseAnalytics.instance.logEvent(
         name: "write",
-        parameters: {
-          "text_length": text.length,
-        },
+        parameters: {"text_length": text.length, "hashtag_count": hashtags.length},
       );
 
       // TextField 초기화
@@ -334,6 +328,23 @@ class _WritePageState extends State<WritePage> {
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  Future<List<String>> _generateHashtags(String? imageUrl) async {
+    try {
+      if (imageUrl?.isEmpty == true) return [];
+
+      final result = await FirebaseFunctions.instanceFor().httpsCallable('generate_hashtags').call({
+        'imageUrl': imageUrl,
+      });
+
+      final data = Map<String, dynamic>.from(result.data);
+      final hashtags = List<dynamic>.from(data['hashtags'] ?? []);
+      return hashtags.map((tag) => tag.toString()).toList();
+    } catch (e) {
+      print(e);
+      return [];
     }
   }
 }
