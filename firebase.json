@@ -3,26 +3,26 @@
     "platforms": {
       "android": {
         "default": {
-          "projectId": "lg-dx-school-5",
-          "appId": "1:76679107859:android:d3ebdc5eff0ae59599b6e6",
+          "projectId": "lg-dx-school-6-1",
+          "appId": "1:998550223677:android:82846cca833e4d17736354",
           "fileOutput": "android/app/google-services.json"
         }
       },
       "ios": {
         "default": {
-          "projectId": "lg-dx-school-5",
-          "appId": "1:76679107859:ios:b656b1d54b342b7999b6e6",
+          "projectId": "lg-dx-school-6-1",
+          "appId": "1:998550223677:ios:7c8b7d408a329355736354",
           "uploadDebugSymbols": false,
           "fileOutput": "ios/Runner/GoogleService-Info.plist"
         }
       },
       "dart": {
         "lib/firebase_options.dart": {
-          "projectId": "lg-dx-school-5",
+          "projectId": "lg-dx-school-6-1",
           "configurations": {
-            "android": "1:76679107859:android:d3ebdc5eff0ae59599b6e6",
-            "ios": "1:76679107859:ios:b656b1d54b342b7999b6e6",
-            "web": "1:76679107859:web:d440bf17fe4138a699b6e6"
+            "android": "1:998550223677:android:82846cca833e4d17736354",
+            "ios": "1:998550223677:ios:7c8b7d408a329355736354",
+            "web": "1:998550223677:web:ee2a1ed4b3821cd8736354"
           }
         }
       }

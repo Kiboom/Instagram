@@ -1,32 +1,13 @@
 {
   "project_info": {
-    "project_number": "76679107859",
-    "project_id": "lg-dx-school-5",
-    "storage_bucket": "lg-dx-school-5.firebasestorage.app"
+    "project_number": "998550223677",
+    "project_id": "lg-dx-school-6-1",
+    "storage_bucket": "lg-dx-school-6-1.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:76679107859:android:64a3cad52533693099b6e6",
-        "android_client_info": {
-          "package_name": "com.example.portfolio"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAmefcgg2yY6gKl7PE-WyanxESZLBAqLaw"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:76679107859:android:d3ebdc5eff0ae59599b6e6",
+        "mobilesdk_app_id": "1:998550223677:android:82846cca833e4d17736354",
         "android_client_info": {
           "package_name": "com.lgdxschool.instagram"
         }
@@ -34,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAmefcgg2yY6gKl7PE-WyanxESZLBAqLaw"
+          "current_key": "AIzaSyDmVEsxnU3oZxsI_RznpaZUiVZfBhvF6PE"
         }
       ],
       "services": {
