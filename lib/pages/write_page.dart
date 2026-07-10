@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:instagram/widgets/barrier_progress_indicator.dart';
 import 'package:instagram/widgets/haptic_feedback.dart';
 import 'package:instagram/widgets/rounded_inkwell.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class WritePage extends StatefulWidget {
   const WritePage({super.key});
@@ -295,24 +296,20 @@ class _WritePageState extends State<WritePage> {
       // TextField가 비어있으면 게시물을 업로드하지 않음
       final String text = _textController.text;
 
-      if (text.isEmpty) {
-        return;
-      }
-
+      // 이미지를 Storage에 업로드하고 다운로드 URL을 가져옵니다.
       final imageUrl = await _uploadImage(context);
 
       // Firestore의 posts 컬렉션에 게시물 추가하기
+      // created_at 필드는 삭제해줍니다!
+
       final newPost = {
         'uid': FirebaseAuth.instance.currentUser?.uid,
         'username': FirebaseAuth.instance.currentUser?.displayName,
         'image_url': imageUrl ?? '',
         'description': _textController.text,
-        'created_at': Timestamp.fromDate(DateTime.now()),
       };
 
-      await FirebaseFirestore.instance
-          .collection("posts") // 데이터를 추가할 콜렉션을 지정합니다.
-          .add(newPost); // 해당 콜렉션에 데이터를 추가합니다.
+      await Supabase.instance.client.from('posts').insert(newPost);
 
       // TextField 초기화
       _textController.clear();

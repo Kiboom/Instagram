@@ -4,9 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:instagram/firebase_options.dart';
 import 'package:instagram/pages/feed_page.dart';
 import 'package:instagram/pages/login_page.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Supabase.initialize(
+    url: "https://huhuqgiyicdjfrwvxbqp.supabase.co",
+    anonKey: "sb_publishable_7DkukbmdLhtExvx9FXjXhQ_6oxeccmT",
+  );
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
