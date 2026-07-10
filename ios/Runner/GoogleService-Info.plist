@@ -26,5 +26,7 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:998550223677:ios:7c8b7d408a329355736354</string>
+	<key>DATABASE_URL</key>
+	<string>https://lg-dx-school-6-1-default-rtdb.asia-southeast1.firebasedatabase.app</string>
 </dict>
 </plist>

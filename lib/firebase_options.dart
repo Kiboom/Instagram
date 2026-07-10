@@ -52,6 +52,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '998550223677',
     projectId: 'lg-dx-school-6-1',
     authDomain: 'lg-dx-school-6-1.firebaseapp.com',
+    databaseURL: 'https://lg-dx-school-6-1-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'lg-dx-school-6-1.firebasestorage.app',
     measurementId: 'G-XK6E23FLLC',
   );
@@ -61,6 +62,7 @@ class DefaultFirebaseOptions {
     appId: '1:998550223677:android:82846cca833e4d17736354',
     messagingSenderId: '998550223677',
     projectId: 'lg-dx-school-6-1',
+    databaseURL: 'https://lg-dx-school-6-1-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'lg-dx-school-6-1.firebasestorage.app',
   );
 
@@ -69,6 +71,7 @@ class DefaultFirebaseOptions {
     appId: '1:998550223677:ios:7c8b7d408a329355736354',
     messagingSenderId: '998550223677',
     projectId: 'lg-dx-school-6-1',
+    databaseURL: 'https://lg-dx-school-6-1-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'lg-dx-school-6-1.firebasestorage.app',
     iosBundleId: 'com.lgdxschool.instagram',
   );
