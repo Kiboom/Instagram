@@ -295,6 +295,9 @@ class _WritePageState extends State<WritePage> {
 
       // TextField가 비어있으면 게시물을 업로드하지 않음
       final String text = _textController.text;
+      if (text.isEmpty) {
+        return;
+      }
 
       // 이미지를 Storage에 업로드하고 다운로드 URL을 가져옵니다.
       final imageUrl = await _uploadImage(context);
