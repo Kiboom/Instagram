@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/pages/feed_page.dart';
 
@@ -11,20 +12,16 @@ class SignUpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFF1F2F3),
-      ),
+      // 페이지의 뼈대를 그려주는 위젯
+      appBar: AppBar(backgroundColor: const Color(0xFFF1F2F3)),
       backgroundColor: const Color(0xFFF1F2F3),
       body: SafeArea(
+        // body는 페이지의 본문 내용
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: ListView(
             children: [
-              Image.asset(
-                'assets/logo.png',
-                width: 76,
-                height: 76,
-              ),
+              Image.asset('assets/logo.png', width: 76, height: 76),
               Container(height: 26),
               Text(
                 '친구들의 사진과 동영상을 보려면\n가입하세요.',
@@ -63,10 +60,7 @@ class SignUpPage extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
-          borderSide: const BorderSide(
-            width: 1.0,
-            color: Colors.black26,
-          ),
+          borderSide: const BorderSide(width: 1.0, color: Colors.black26),
         ),
         filled: true,
         fillColor: Colors.white,
@@ -86,10 +80,7 @@ class SignUpPage extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
-          borderSide: const BorderSide(
-            width: 1.0,
-            color: Colors.black26,
-          ),
+          borderSide: const BorderSide(width: 1.0, color: Colors.black26),
         ),
         filled: true,
         fillColor: Colors.white,
@@ -109,10 +100,7 @@ class SignUpPage extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
-          borderSide: const BorderSide(
-            width: 1.0,
-            color: Colors.black26,
-          ),
+          borderSide: const BorderSide(width: 1.0, color: Colors.black26),
         ),
         filled: true,
         fillColor: Colors.white,
@@ -148,12 +136,18 @@ class SignUpPage extends StatelessWidget {
 
   Future<void> _signUp(BuildContext context) async {
     try {
-      final email = _emailController.text.trim();
-      final password = _passwordController.text.trim();
+      final String email = _emailController.text.trim();
+      final String password = _passwordController.text.trim();
 
       // 과제1: 회원가입 처리
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
       // 과제2: 닉네임 업데이트
+      final String displayName = _nickNameController.text.trim();
+      await FirebaseAuth.instance.currentUser?.updateDisplayName(displayName);
 
       // 로그인 성공 시 피드 화면으로 이동
       Navigator.pushReplacement(
