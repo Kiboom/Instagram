@@ -47,29 +47,29 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAOoAVWX93g1IAtgtKJGVzru3P94gIEo2s',
-    appId: '1:998550223677:web:ee2a1ed4b3821cd8736354',
-    messagingSenderId: '998550223677',
-    projectId: 'lg-dx-school-6-1',
-    authDomain: 'lg-dx-school-6-1.firebaseapp.com',
-    storageBucket: 'lg-dx-school-6-1.firebasestorage.app',
-    measurementId: 'G-XK6E23FLLC',
+    apiKey: 'AIzaSyDfBfEgVwJBzCfiViBb3_uyXxINzg_A7xU',
+    appId: '1:63412898163:web:57650bbcb8147e429e5d06',
+    messagingSenderId: '63412898163',
+    projectId: 'lg-dx-school-6-2',
+    authDomain: 'lg-dx-school-6-2.firebaseapp.com',
+    storageBucket: 'lg-dx-school-6-2.firebasestorage.app',
+    measurementId: 'G-38PZTY4ZL8',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDmVEsxnU3oZxsI_RznpaZUiVZfBhvF6PE',
-    appId: '1:998550223677:android:82846cca833e4d17736354',
-    messagingSenderId: '998550223677',
-    projectId: 'lg-dx-school-6-1',
-    storageBucket: 'lg-dx-school-6-1.firebasestorage.app',
+    apiKey: 'AIzaSyCcP41jE8XhKI_sANs3NlWOCK1hg91Z0AA',
+    appId: '1:63412898163:android:ba526a9b372e1a2a9e5d06',
+    messagingSenderId: '63412898163',
+    projectId: 'lg-dx-school-6-2',
+    storageBucket: 'lg-dx-school-6-2.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCKjLglKnbzantpTRm0WyMN58Mr_vZleUw',
-    appId: '1:998550223677:ios:7c8b7d408a329355736354',
-    messagingSenderId: '998550223677',
-    projectId: 'lg-dx-school-6-1',
-    storageBucket: 'lg-dx-school-6-1.firebasestorage.app',
+    apiKey: 'AIzaSyDNbyZ6Yifpl4FdMoGptOlkc7x4vuoJcdI',
+    appId: '1:63412898163:ios:c4272609763265af9e5d06',
+    messagingSenderId: '63412898163',
+    projectId: 'lg-dx-school-6-2',
+    storageBucket: 'lg-dx-school-6-2.firebasestorage.app',
     iosBundleId: 'com.lgdxschool.instagram',
   );
 
