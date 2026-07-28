@@ -9,6 +9,7 @@ include: package:flutter_lints/flutter.yaml
 linter:
   rules:
     use_build_context_synchronously: false
+    prefer_conditional_assignment: false
     sized_box_for_whitespace: false
     prefer_const_constructors: false
     require_trailing_commas: true
