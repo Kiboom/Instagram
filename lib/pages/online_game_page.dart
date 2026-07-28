@@ -28,6 +28,9 @@ class OnlineGamePageState extends State<OnlineGamePage> {
     super.dispose();
   }
 
+  bool isAdmin = false; // Only the instructor keeps this true, on their local machine.
+  int adminTimeout = 10;
+
   int myCount = 0;
   int gameTimeout = 0;
   int remainingSeconds = 0;
@@ -65,7 +68,83 @@ class OnlineGamePageState extends State<OnlineGamePage> {
           child: buildBody(),
         ),
       ),
+      bottomNavigationBar: isAdmin ? buildAdminPanel() : null,
     );
+  }
+
+  Widget buildAdminPanel() {
+    return SafeArea(
+      child: Container(
+        color: const Color(0xFFF1F2F3),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      adminTimeout = (adminTimeout - 5).clamp(5, 60);
+                    });
+                  },
+                  icon: const Icon(Icons.remove),
+                ),
+                Text(
+                  '$adminTimeout초',
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      adminTimeout = (adminTimeout + 5).clamp(5, 60);
+                    });
+                  },
+                  icon: const Icon(Icons.add),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: gameStatus == GameStatus.START ? null : startGame,
+                  child: const Text('시작'),
+                ),
+                Container(width: 8),
+                ElevatedButton(
+                  onPressed: gameStatus == GameStatus.START ? stopGame : null,
+                  child: const Text('중지'),
+                ),
+                Container(width: 8),
+                ElevatedButton(
+                  onPressed: resetGame,
+                  child: const Text('초기화'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // set() replaces the whole 'game' node, so the previous game_result is cleared.
+  Future<void> startGame() async {
+    await FirebaseDatabase.instance.ref('game').set({
+      'game_status': GameStatus.START.name,
+      'game_timeout': adminTimeout,
+    });
+  }
+
+  Future<void> stopGame() async {
+    await FirebaseDatabase.instance.ref('game/game_status').set(GameStatus.END.name);
+  }
+
+  Future<void> resetGame() async {
+    await FirebaseDatabase.instance.ref('game').set({
+      'game_status': GameStatus.READY.name,
+      'game_timeout': adminTimeout,
+    });
   }
 
   Widget buildBody() {
