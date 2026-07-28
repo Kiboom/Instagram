@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/data/post.dart';
 import 'package:instagram/pages/login_page.dart';
@@ -45,6 +46,8 @@ class FeedPageState extends State<FeedPage> {
           child: CupertinoScrollbar(
             child: ListView(
               children: [
+                _buildActiveUsers(),
+
                 // 인스타그램 피드 카드
                 for (final item in _posts) PostWidget(item: item),
               ],
@@ -79,39 +82,8 @@ class FeedPageState extends State<FeedPage> {
       title: Image.asset('assets/logo2.png', width: 120),
       centerTitle: true,
       actions: [
-        IconButton(
-          icon: Icon(Icons.add_box_outlined, color: Colors.black),
-          onPressed: () async {
-            // 글쓰기 페이지로 이동
-            await Navigator.push(
-              context,
-              MaterialPageRoute(
-                fullscreenDialog: true,
-                builder: (context) {
-                  return WritePage();
-                },
-              ),
-            );
-            _loadPosts();
-          },
-        ),
-        Container(
-          margin: EdgeInsets.only(right: 16),
-          child: IconButton(
-            icon: Icon(Icons.logout_rounded, color: Colors.black),
-            onPressed: () async {
-              // 로그아웃 처리
-              await FirebaseAuth.instance.signOut();
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return LoginPage();
-                  },
-                ),
-              );
-            },
-          ),
-        ),
+        _buildWriteButton(),
+        _buildLogoutButton(),
       ],
     );
   }
