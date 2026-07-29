@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/data/post.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class PostWidget extends StatefulWidget {
   const PostWidget({
@@ -17,6 +18,20 @@ class PostWidget extends StatefulWidget {
 
 class _PostWidgetState extends State<PostWidget> {
   final double _imageHeight = 400.0;
+  final TextEditingController _commentController = TextEditingController();
+  List<Comment> _comments = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadComments();
+  }
+
+  @override
+  void dispose() {
+    _commentController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +49,9 @@ class _PostWidgetState extends State<PostWidget> {
           _buildIcons(),
           Container(height: 12),
           _buildLikeAndComments(),
+          Container(height: 8),
+          _buildComments(),
+          _buildCommentInput(),
         ],
       ),
     );
@@ -154,7 +172,7 @@ class _PostWidgetState extends State<PostWidget> {
         ),
         Container(height: 4),
         Text(
-          '댓글 ${widget.item.comments.length}개 모두 보기',
+          '댓글 ${_comments.length}개 모두 보기',
           style: TextStyle(
             color: Colors.black54,
           ),
@@ -168,5 +186,115 @@ class _PostWidgetState extends State<PostWidget> {
         ),
       ],
     );
+  }
+
+  Widget _buildComments() {
+    if (_comments.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (final comment in _comments) ...[
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  comment.username,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Container(width: 8),
+                Expanded(
+                  child: Text(
+                    comment.comment,
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildCommentInput() {
+    return Container(
+      padding: const EdgeInsets.only(top: 8),
+      child: Row(
+        children: [
+          const CircleAvatar(radius: 14),
+          Container(width: 8),
+          Expanded(
+            child: TextField(
+              controller: _commentController,
+              decoration: const InputDecoration(
+                hintText: '댓글 달기...',
+                border: InputBorder.none,
+                isDense: true,
+              ),
+              onSubmitted: (_) => _createComment(),
+            ),
+          ),
+          TextButton(
+            onPressed: _createComment,
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.zero,
+              minimumSize: const Size(40, 32),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: const Text(
+              '게시',
+              style: TextStyle(
+                color: Colors.blue,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _loadComments() async {
+    final rows = await Supabase.instance.client
+        .from('comments')
+        .select()
+        .eq('post_id', widget.item.id)
+        .order('created_at', ascending: true);
+    final List<Comment> comments = [];
+    for (final row in rows) {
+      comments.add(
+        Comment(
+          uid: row['uid'],
+          username: row['username'],
+          comment: row['content'],
+          createdAt: DateTime.parse(row['created_at']),
+        ),
+      );
+    }
+    setState(() {
+      _comments = comments;
+    });
+  }
+
+  Future<void> _createComment() async {
+    final String content = _commentController.text.trim();
+    if (content.isEmpty) {
+      return;
+    }
+    await Supabase.instance.client.from('comments').insert({
+      'post_id': widget.item.id,
+      'uid': FirebaseAuth.instance.currentUser?.uid,
+      'username': FirebaseAuth.instance.currentUser?.displayName,
+      'content': content,
+    });
+    _commentController.clear();
+    await _loadComments();
   }
 }
