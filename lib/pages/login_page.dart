@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/pages/feed_page.dart';
@@ -174,6 +175,8 @@ class _LoginPageState extends State<LoginPage> {
         email: email,
         password: password,
       );
+
+      FirebaseAnalytics.instance.logLogin(loginMethod: "email");
 
       // 로그인 성공 시 피드 화면으로 이동
       if (FirebaseAuth.instance.currentUser != null) {

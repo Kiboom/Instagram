@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
@@ -32,9 +32,7 @@ class _WritePageState extends State<WritePage> {
         appBar: _buildAppBar(),
         body: Column(
           children: [
-            Expanded(
-              child: _buildTextField(),
-            ),
+            Expanded(child: _buildTextField()),
             _buildSelectedImages(),
             Container(height: 20),
             _buildShareButton(context),
@@ -53,13 +51,7 @@ class _WritePageState extends State<WritePage> {
       child: ListView(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.only(left: 16, right: 100),
-        children: [
-          if (_pickedImage != null)
-            _buildSelectedImage(
-              _pickedImage!,
-              itemSize,
-            ),
-        ],
+        children: [if (_pickedImage != null) _buildSelectedImage(_pickedImage!, itemSize)],
       ),
     );
   }
@@ -70,37 +62,23 @@ class _WritePageState extends State<WritePage> {
       children: [
         Container(
           margin: const EdgeInsets.only(right: 12),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: kIsWeb
                 ? Image.network(image.path)
-                : Image.file(
-                    File(image.path),
-                    width: itemSize,
-                    height: itemSize,
-                    fit: BoxFit.cover,
-                  ),
+                : Image.file(File(image.path), width: itemSize, height: itemSize, fit: BoxFit.cover),
           ),
         ),
         Container(
           width: 18,
           height: 18,
           margin: const EdgeInsets.only(right: 16, top: 2),
-          decoration: BoxDecoration(
-            color: Colors.black87,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: Colors.black87, shape: BoxShape.circle),
           child: Center(
             child: IconButton(
               padding: EdgeInsets.zero,
-              icon: Icon(
-                Icons.close_rounded,
-                size: 12,
-                color: Colors.white70,
-              ),
+              icon: Icon(Icons.close_rounded, size: 12, color: Colors.white70),
               onPressed: () {
                 setState(() {
                   _pickedImage = null;
@@ -120,31 +98,16 @@ class _WritePageState extends State<WritePage> {
       height: 52,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            offset: Offset(0, 4),
-            blurRadius: 20,
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), offset: Offset(0, 4), blurRadius: 20)],
       ),
       child: FloatingActionButton(
         elevation: 0,
         backgroundColor: Colors.orangeAccent,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(100),
-        ),
-        child: Icon(
-          Icons.photo_size_select_actual_outlined,
-          color: Colors.white,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+        child: Icon(Icons.photo_size_select_actual_outlined, color: Colors.white),
         onPressed: () async {
           if (_pickedImage != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('이미지는 최대 1개까지 선택 가능합니다.'),
-              ),
-            );
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('이미지는 최대 1개까지 선택 가능합니다.')));
             InstagramHaptic.error();
             return;
           }
@@ -166,11 +129,7 @@ class _WritePageState extends State<WritePage> {
       backgroundColor: const Color(0xFFF1F2F3),
       title: const Text(
         '새 게시물',
-        style: TextStyle(
-          fontSize: 16,
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-        ),
+        style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -182,15 +141,9 @@ class _WritePageState extends State<WritePage> {
       minLines: null,
       maxLines: null,
       decoration: InputDecoration(
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 10,
-        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         hintText: '문구를 작성하거나 설문을 추가하세요...',
-        hintStyle: TextStyle(
-          fontSize: 14,
-          color: Colors.black45,
-        ),
+        hintStyle: TextStyle(fontSize: 14, color: Colors.black45),
         border: InputBorder.none,
       ),
       onChanged: (_) {
@@ -204,11 +157,7 @@ class _WritePageState extends State<WritePage> {
       child: RoundedInkWell(
         onTap: () {
           if (_textController.text.isEmpty) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('게시물을 입력해주세요.'),
-              ),
-            );
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('게시물을 입력해주세요.')));
             InstagramHaptic.error();
             return;
           }
@@ -223,11 +172,7 @@ class _WritePageState extends State<WritePage> {
         child: Center(
           child: Text(
             '공유',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
           ),
         ),
       ),
@@ -313,6 +258,13 @@ class _WritePageState extends State<WritePage> {
       };
 
       await Supabase.instance.client.from('posts').insert(newPost);
+
+      FirebaseAnalytics.instance.logEvent(
+        name: "write",
+        parameters: {
+          "text_length": text.length,
+        },
+      );
 
       // TextField 초기화
       _textController.clear();
