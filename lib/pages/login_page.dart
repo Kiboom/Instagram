@@ -176,6 +176,7 @@ class _LoginPageState extends State<LoginPage> {
         password: password,
       );
 
+      // 로그인 이벤트 수집
       FirebaseAnalytics.instance.logLogin(loginMethod: "email");
 
       // 로그인 성공 시 피드 화면으로 이동

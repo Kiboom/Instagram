@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -245,6 +246,11 @@ class _WritePageState extends State<WritePage> {
       }
 
       // 이미지를 Storage에 업로드하고 다운로드 URL을 가져옵니다.
+      if (text.isEmpty) {
+        FirebaseCrashlytics.instance.crash();
+        return;
+      }
+
       final imageUrl = await _uploadImage(context);
 
       // Firestore의 posts 컬렉션에 게시물 추가하기
@@ -259,6 +265,7 @@ class _WritePageState extends State<WritePage> {
 
       await Supabase.instance.client.from('posts').insert(newPost);
 
+      // 글쓰기 이벤트 수집
       FirebaseAnalytics.instance.logEvent(
         name: "write",
         parameters: {

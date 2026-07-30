@@ -150,6 +150,7 @@ class SignUpPage extends StatelessWidget {
       final String displayName = _nickNameController.text.trim();
       await FirebaseAuth.instance.currentUser?.updateDisplayName(displayName);
 
+      // 회원가입 이벤트 수집
       FirebaseAnalytics.instance.logSignUp(signUpMethod: "email");
 
       // 로그인 성공 시 피드 화면으로 이동
