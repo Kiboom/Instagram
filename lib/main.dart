@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/firebase_options.dart';
 import 'package:instagram/pages/feed_page.dart';
@@ -15,6 +16,18 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Firebase Remote Config 설정
+  await FirebaseRemoteConfig.instance.setConfigSettings(
+    RemoteConfigSettings(
+      fetchTimeout: const Duration(seconds: 10),
+      minimumFetchInterval: const Duration(hours: 0),
+    ),
+  );
+
+  // Firebase Remote Config 데이터 가져오기
+  await FirebaseRemoteConfig.instance.fetchAndActivate();
+
   runApp(const InstagramApp());
 }
 
