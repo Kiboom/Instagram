@@ -8,28 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:63412898163:android:5954ffabe50c6eda9e5d06",
+        "mobilesdk_app_id": "1:63412898163:android:61f99c2c90820d099e5d06",
         "android_client_info": {
-          "package_name": "com.example.insta_app"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCcP41jE8XhKI_sANs3NlWOCK1hg91Z0AA"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:63412898163:android:f96198f7cc44ee349e5d06",
-        "android_client_info": {
-          "package_name": "com.example.instagram"
+          "package_name": "com.kiboom.lgdxschool.cloud.instagram"
         }
       },
       "oauth_client": [],

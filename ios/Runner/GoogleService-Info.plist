@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.lgdxschool.instagram</string>
+	<string>com.kiboom.lgdxschool.cloud.instagram</string>
 	<key>PROJECT_ID</key>
 	<string>lg-dx-school-6-2</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,7 +25,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:63412898163:ios:c4272609763265af9e5d06</string>
+	<string>1:63412898163:ios:1fe24017e32605909e5d06</string>
 	<key>DATABASE_URL</key>
 	<string>https://lg-dx-school-6-2-default-rtdb.asia-southeast1.firebasedatabase.app</string>
 </dict>

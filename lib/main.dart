@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:instagram/firebase_options.dart';
 import 'package:instagram/pages/feed_page.dart';
 import 'package:instagram/pages/login_page.dart';
+import 'package:instagram/push_notification_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
@@ -39,6 +40,8 @@ void main() async {
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
       runApp(const InstagramApp());
+
+      await PushNotificationService.initialize();
     },
     (exception, stacktrace) async {
       // 앱이 갑자기 종료되거나 에러가 발생했을 때 Crashlytics로 상세한 내용을 보내줍니다.
